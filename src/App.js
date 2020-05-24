@@ -59,6 +59,8 @@ class App extends Component {
         {/* <Nav /> */}
         <h1>MOVIES</h1>
         <MoviesListPage movies={this.state.movies} deleteMovie={this.deleteMovie} />
+        {/* other components that can use the same data that why we needed to left the state up */}
+        {/* <UserPage movies={this.state.movies} /> */}
       </div>
     );
   }
