@@ -3,9 +3,9 @@ import MoviesListComp from '../../components/MoviesListComp';
 
 import './style.css';
 
-const MoviesListPage = (props) => {
+const MoviesListPage = () => {
   return (
-    < MoviesListComp movies={props.movies} deleteMovie={props.deleteMovie} />
+    <MoviesListComp />
   );
 }
 
