@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import MoviesListPage from "./pages/MoviesListPage";
 
 import './App.css';
+import moviesContext from './context/moviesContext';
 
 const placeholderImage = "https://via.placeholder.com/300";
 
@@ -55,11 +56,15 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
-        {/* <Nav /> */}
-        <h1>MOVIES</h1>
-        <MoviesListPage movies={this.state.movies} deleteMovie={this.deleteMovie} />
-      </div>
+      <moviesContext.Provider value={{ deleteMovie: this.deleteMovie, movies: this.state.movies }}>
+        <div className="App">
+          {/* <Nav /> */}
+          <h1>MOVIES</h1>
+          <MoviesListPage />
+          {/* other components that can use the same data that why we needed to left the state up */}
+          {/* <UserPage movies={this.state.movies} /> */}
+        </div>
+      </moviesContext.Provider >
     );
   }
 }
