@@ -269,6 +269,19 @@ const MoviesListComp = () => {
 
 ## Final notes
 
+- Context have a third property called displayName which used to give a name to the Provider on react-dev-tool, imagine you have multiple provider then it will be hard to tell which one is which without clicking it.
+
+![](https://i.imgur.com/iRkIS2Z.png)
+
+```jsx
+export const MoviesContext = React.createContext();
+MoviesContext.displayName = "MoviesContext";
+```
+
+after this the Provider will have a name.
+
+![](https://i.imgur.com/N2SeNYa.png)
+
 - [You can Consume Multiple Contexts](https://reactjs.org/docs/context.html#consuming-multiple-contexts)
 - All consumers that are descendants of a Provider will re-render whenever the Provider’s `value` prop changes.
 - [Performance tips](https://reactjs.org/docs/context.html#caveats)
