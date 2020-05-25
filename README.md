@@ -1,68 +1,287 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Context API
 
-## Available Scripts
+## What is react Context API?
 
-In the project directory, you can run:
+React's context allows you to share data to any component, by storing this data on a central plcae, you can think of it like a global store where every component would be able to request an access to it.
+instead of the normal way of passing the data from the parent to the direct child via props which would case somthimes something called prop drilling
 
-### `npm start`
+## What is prop drilling?
+Prop drilling (also called "threading"): passing props from component to another to another and so on.... refers to the process you have to go through to get data to parts of the React Component tree
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- for example if we have this tree of components 
+![](https://i.imgur.com/TGDgI2f.png)
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+    and if we wanted to pass data to Component `C` then we have to pass it through `A` then `B` before get access to it inside `C` component.
+    we can solve this problem using ***Context API***.
 
-### `npm test`
+## what do we need to start working with the Context API?
+It's a built-in feature You will only need a react 16.3 or above, no external libraries or anything.
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## The building blocks of Context API
+1. Context Instance.
+2. Provider.
+3. Consumer.
 
-### `npm run build`
+### Context Instance:
+It is the instance we are going to use to link the parts together.
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```jsx
+const Context = React.createContext(defaultValue);
+```
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+here we are creating an instance that can receive an optional default value it is like a fallback value.
+we will use this object to create the provider and the consumer
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Provider
+This is the delivery system for our store, the piece that is going to deliver the data to other consumers on the app.
+> we can have nested provider
 
-### `npm run eject`
+```jsx
+// Context is the instance the we created before
+<Context.Provider value={/* some value */}>
+{/*...components that can consume the store*/}
+</Context.Provider>
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+We simply say that anything wrapped under this Provider component will have access to this value via the Consumer 
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+if the provider has a value then the consumer will use this value instead of the default value
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### Consumer
+It is the object that we use to access the context's value.
+> we can have multiple consumers subscribed to the same Provider.
+> The consumer will find the closest provider to get the data from.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+The value we pass to the Provider is sent to our Consumer as a param to the Consumer function
+```jsx
+<Context.Consumer>
+  {value => /* render something based on the context value */}
+</Context.Consumer>
+```
 
-## Learn More
+## Exercise
+Le's use the Context API with our app
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+We will use a simple example for the sake of simplicity, but you can imagine this part being a part of a bigger app.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+This is the tree of our app:
+App->MoviesListPage->MoviesListComp->Card
 
-### Code Splitting
+> of course this is a simple example but with real application we will have a more nested components, think of the times that you needed to pass you user info to a multiple layers before reaching the component you want
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+1. Clone the repo, install the dependencies, run the app, check the files and the components.
+2. now let's create our Context:
+    * create a folder called `context` on the src folder.
+    * create a file called `MoviesContext.js`
+    * now let's create our Context instance.
+<details><summary>Code</summary>
 
-### Analyzing the Bundle Size
+```jsx
+import React from 'react';
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+const MoviesContext = React.createContext();
 
-### Making a Progressive Web App
+export default MoviesContext;
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+```
+</details>
 
-### Advanced Configuration
+3. Import the context instance inside the app component and wrap what inside the app with the Context.Provider and the pass the movies and the delete function to Provider value property.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+<details><summary>Code</summary>
 
-### Deployment
+```jsx
+import MoviesContext from './context/moviesContext';
+//....code
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+render() {
+    return (
+      <MoviesContext.Provider value={{ deleteMovie: this.deleteMovie, movies: this.state.movies }}>
+        <div className="App">
+          {/* <Nav /> */}
+          <h1>MOVIES</h1>
+          <MoviesListPage />
+          {/* other components that can use the same data that why we needed to left the state up */}
+          {/* <UserPage movies={this.state.movies} /> */}
+        </div>
+      </MoviesContext.Provider >
+    );
+  }
 
-### `npm run build` fails to minify
+```
+</details>
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+4. Now all we have to do is to use this data on any component descendant of the same vertical line
+    * insert the context instance inside MoviesListComp and then wrap the component with Context.Consumer
+
+<details><summary>Code</summary>
+
+```jsx
+import MoviesContext from './context/moviesContext';
+//....code
+
+const MoviesListComp = () => (
+  <MoviesContext.Consumer>
+    {/*this function receives the value and we used destructure to get the movies and delteMovie funtion*/}
+    {({ movies, deleteMovie }) => (
+      <ul>
+        {movies.map(movie => createCard(movie, deleteMovie))}
+      </ul>)
+    }
+  </MoviesContext.Consumer>
+)
+
+
+```
+</details>
+
+5. Everything is done this how we can use the Context API
+
+-------
+
+## Refactor to central store
+now the app doesn't have to be a class component so we can refactor our code to have **a central store**.
+
+1. Now on our moviesContext file creat a class called MoviesProvider or any name you want.
+2. move the state and the deleteMovie method from the App to MoviesProvider class
+3. now inside the render method we will receive the  other components using children props.
+
+
+<details><summary>Code</summary>
+
+```jsx
+import React from 'react';
+
+export const MoviesContext = React.createContext();
+
+class MoviesProvider extends React.Component {
+
+state = {...}
+
+deleteMovie = (id) => {...}
+
+ render() {
+    return (
+      <MoviesContext.Provider value={{ deleteMovie: this.deleteMovie, movies: this.state.movies }}>
+        {this.props.children}
+      </MoviesContext.Provider>
+    );
+  }
+
+}
+
+export default MoviesProvider;
+
+```
+</details>
+
+4. And the last step is to convert the App to functional component and wrap it with the MoviesProvider instead of the Context.Provider 
+
+<details><summary>Code</summary>
+
+```jsx
+
+import MoviesProvider from './context/moviesContext';
+
+
+const App = () => {
+  return (
+    <MoviesProvider>
+      <div className="App">
+        {/* <Nav /> */}
+        <h1>MOVIES</h1>
+        <MoviesListPage />
+        {/* other components that can use the same data that why we needed to left the state up */}
+        {/* <UserPage movies={this.state.movies} /> */}
+      </div>
+    </MoviesProvider>
+  );
+}
+
+export default App;
+
+```
+</details>
+
+
+## Refactor to use useContext hook:
+You can use `useContext` instead of wrapping the components with a consumer.
+
+1. Import the context instance.
+2. Import the useContext form react.
+3. instead of wrapping the component with consumer just destructure the values from the useContext and you are good to go
+
+<details>
+<summary>
+Code
+</summary>
+
+```jsx
+
+import React, { useContext } from 'react';
+import { MoviesContext } from '../../context/moviesContext';
+
+const MoviesListComp = () => {
+  const { movies, deleteMovie } = useContext(MoviesContext);
+  return (
+    <ul>
+      {movies.map(movie => createCard(movie, deleteMovie))}
+    </ul>
+  )
+}
+```
+
+</details>
+
+## Final notes
+
+- you can use `this.context` inside the class to read the value of the nearest context without the consumer object but you can't consume multiple consumers.
+- you can use it inside any lifecycle method inside the class
+
+```jsx
+class MyClass extends React.Component {
+  render() {
+    let value = this.context;
+    /* render something based on the value of MyContext */
+  }
+}
+
+//this is attaching Context instance to contextType static field of MyClass
+MyClass.contextType = Context;
+```
+
+or we can define the contextType inside the MyClass
+
+```jsx
+class MyClass extends React.Component {
+  static contextType = Context;
+  render() {
+    let value = this.context;
+    /* render something based on the value */
+  }
+}
+```
+
+- [You can Consume Multiple Contexts](https://reactjs.org/docs/context.html#consuming-multiple-contexts)
+- All consumers that are descendants of a Provider will re-render whenever the Provider’s `value` prop changes.
+- [Performance tips](https://reactjs.org/docs/context.html#caveats)
+- You should always use the context if you only passing the data down two or three components.
+- Get back to [this](https://github.com/facebook/react/issues/15156#issuecomment-474590693) after you are comfortable with the Context API and the Hooks.
+
+- ### Redux vs Context API:
+    **Context API**
+    * Context is hard to debug doesn't have a debuging tools like redux.
+    * No middlewares with Context API.
+
+    **Why use Redux:**
+    * seperation of concern(every function pure and do one thing/ you know everything about the input and the output)
+    * predictability(you know everything about the state/action shape...)
+    * Ease of test (pure function)
+    * community support
+    * Redux devtools(time travel)
+    * MiddleWares
+
+    **Why not use Redux:**
+    * 10 components for example
+    * large application but only a few component interact with each other
+    * the size of the application where the bundle became bigger with redux
