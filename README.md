@@ -206,8 +206,39 @@ export default App;
 ```
 </details>
 
+## Context in class component
 
-## Refactor to use useContext hook:
+- You can use `this.context` inside the class to read the value of the nearest context without the consumer object but you can't consume multiple consumers.
+- You can use it inside any lifecycle method inside the class
+
+```jsx
+class MyClass extends React.Component {
+  render() {
+    let value = this.context;
+    /* render something based on the value of MyContext */
+  }
+}
+
+//this is attaching Context instance to contextType static field of MyClass
+MyClass.contextType = Context;
+```
+
+or we can define the contextType inside the MyClass
+
+```jsx
+class MyClass extends React.Component {
+  static contextType = Context;
+  render() {
+    let value = this.context;
+    /* render something based on the value */
+  }
+}
+```
+## Bonus #1
+Try and use `this.context` with our app instead of using the Consumer
+
+## Bonus #2
+### Refactor to use useContext hook:
 You can use `useContext` instead of wrapping the components with a consumer.
 
 1. Import the context instance.
@@ -238,42 +269,15 @@ const MoviesListComp = () => {
 
 ## Final notes
 
-- you can use `this.context` inside the class to read the value of the nearest context without the consumer object but you can't consume multiple consumers.
-- you can use it inside any lifecycle method inside the class
-
-```jsx
-class MyClass extends React.Component {
-  render() {
-    let value = this.context;
-    /* render something based on the value of MyContext */
-  }
-}
-
-//this is attaching Context instance to contextType static field of MyClass
-MyClass.contextType = Context;
-```
-
-or we can define the contextType inside the MyClass
-
-```jsx
-class MyClass extends React.Component {
-  static contextType = Context;
-  render() {
-    let value = this.context;
-    /* render something based on the value */
-  }
-}
-```
-
 - [You can Consume Multiple Contexts](https://reactjs.org/docs/context.html#consuming-multiple-contexts)
 - All consumers that are descendants of a Provider will re-render whenever the Provider’s `value` prop changes.
 - [Performance tips](https://reactjs.org/docs/context.html#caveats)
-- You should always use the context if you only passing the data down two or three components.
+- You should not always use the context if you only passing the data down two or three components.
 - Get back to [this](https://github.com/facebook/react/issues/15156#issuecomment-474590693) after you are comfortable with the Context API and the Hooks.
 
 - ### Redux vs Context API:
   ***It is up to you but this is some of the things to keep in your mind before deciding on using one over the other***
-  
+
     **Context API**
     * Context is hard to debug doesn't have debugging tools like redux.
     * No middlewares with Context API.
