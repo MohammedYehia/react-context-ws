@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Card from '../Card';
 import { MoviesContext } from '../../context/moviesContext';
 
@@ -23,15 +23,13 @@ const createCard = (movie, deleteMovie) => {
 }
 
 
-const MoviesListComp = () => (
-  <MoviesContext.Consumer>
-    {({ movies, deleteMovie }) => (
-      <ul>
-        {movies.map(movie => createCard(movie, deleteMovie))}
-      </ul>)
-    }
-  </MoviesContext.Consumer>
-)
-
+const MoviesListComp = () => {
+  const { movies, deleteMovie } = useContext(MoviesContext);
+  return (
+    <ul>
+      {movies.map(movie => createCard(movie, deleteMovie))}
+    </ul>
+  )
+}
 
 export default MoviesListComp;
