@@ -273,6 +273,7 @@ class MyClass extends React.Component {
 
 - ### Redux vs Context API:
   ***It is up to you but this is some of the things to keep in your mind before deciding on using one over the other***
+  
     **Context API**
     * Context is hard to debug doesn't have debugging tools like redux.
     * No middlewares with Context API.
