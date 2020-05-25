@@ -2,7 +2,7 @@ import React from 'react';
 import Card from '../Card';
 
 import './style.css';
-import moviesContext from '../../context/moviesContext';
+import MoviesContext from '../../context/moviesContext';
 
 const createCard = (movie, deleteMovie) => {
   const { id, movieName, poster, rate, imdbLink, details, likes } = movie;
@@ -23,13 +23,13 @@ const createCard = (movie, deleteMovie) => {
 
 
 const MoviesListComp = () => (
-  <moviesContext.Consumer>
+  <MoviesContext.Consumer>
     {({ movies, deleteMovie }) => (
       <ul>
         {movies.map(movie => createCard(movie, deleteMovie))}
       </ul>)
     }
-  </moviesContext.Consumer>
+  </MoviesContext.Consumer>
 )
 
 
