@@ -2,19 +2,20 @@
 
 ## What is react Context API?
 
-React's context allows you to share data to any component, by storing this data on a central plcae, you can think of it like a global store where every component would be able to request an access to it.
-instead of the normal way of passing the data from the parent to the direct child via props which would case somthimes something called prop drilling
+React's context allows you to share data with any component, by storing this data on a central place, you can think of it like a global store where every component would be able to request access to it.
+instead of the normal way of passing the data from the parent to the direct child via props which would cause sometimes something called prop drilling
 
 ## What is prop drilling?
 Prop drilling (also called "threading"): passing props from component to another to another and so on.... refers to the process you have to go through to get data to parts of the React Component tree
 
 - for example if we have this tree of components 
-![](https://i.imgur.com/TGDgI2f.png)
 
-    and if we wanted to pass data to Component `C` then we have to pass it through `A` then `B` before get access to it inside `C` component.
-    we can solve this problem using ***Context API***.
+  ![](https://i.imgur.com/TGDgI2f.png)
 
-## what do we need to start working with the Context API?
+  and if we wanted to pass data to Component `C` then we have to pass it through `A` then `B` before getting access to it inside `C` component.
+  we can solve this problem using ***Context API***.
+
+## What do we need to start working with the Context API?
 It's a built-in feature You will only need a react 16.3 or above, no external libraries or anything.
 
 ## The building blocks of Context API
@@ -29,12 +30,13 @@ It is the instance we are going to use to link the parts together.
 const Context = React.createContext(defaultValue);
 ```
 
-here we are creating an instance that can receive an optional default value it is like a fallback value.
-we will use this object to create the provider and the consumer
+Here we are creating an instance that can receive an optional default value it is like a fallback value.
+We will use this object to create the provider and the consumer
 
 ### Provider
 This is the delivery system for our store, the piece that is going to deliver the data to other consumers on the app.
 > we can have nested provider
+
 
 ```jsx
 // Context is the instance the we created before
@@ -42,6 +44,7 @@ This is the delivery system for our store, the piece that is going to deliver th
 {/*...components that can consume the store*/}
 </Context.Provider>
 ```
+**Note:** we can't use anything other than the value prop name (it is a reserved word for the provider)
 
 We simply say that anything wrapped under this Provider component will have access to this value via the Consumer 
 
@@ -50,7 +53,7 @@ if the provider has a value then the consumer will use this value instead of the
 ### Consumer
 It is the object that we use to access the context's value.
 > we can have multiple consumers subscribed to the same Provider.
-> The consumer will find the closest provider to get the data from.
+> The Consumer will find the closest provider to get the data from or it will use the default value if the Provider value was omitted.
 
 The value we pass to the Provider is sent to our Consumer as a param to the Consumer function
 ```jsx
@@ -60,20 +63,20 @@ The value we pass to the Provider is sent to our Consumer as a param to the Cons
 ```
 
 ## Exercise
-Le's use the Context API with our app
+Let's use the Context API with our app
 
 We will use a simple example for the sake of simplicity, but you can imagine this part being a part of a bigger app.
 
 This is the tree of our app:
 App->MoviesListPage->MoviesListComp->Card
 
-> of course this is a simple example but with real application we will have a more nested components, think of the times that you needed to pass you user info to a multiple layers before reaching the component you want
+> of course this is a simple example but with a real application, we will have more nested components, think of the times that you needed to pass you user's info to multiple layers before reaching the component you want
 
 1. Clone the repo, install the dependencies, run the app, check the files and the components.
-2. now let's create our Context:
-    * create a folder called `context` on the src folder.
-    * create a file called `MoviesContext.js`
-    * now let's create our Context instance.
+2. Now let's create our Context:
+    * Create a folder called `context` on the src folder.
+    * Create a file called `MoviesContext.js`
+    * Now let's create our Context instance.
 <details><summary>Code</summary>
 
 ```jsx
@@ -139,7 +142,7 @@ const MoviesListComp = () => (
 
 -------
 
-## Refactor to central store
+## Refactor to a central store
 now the app doesn't have to be a class component so we can refactor our code to have **a central store**.
 
 1. Now on our moviesContext file creat a class called MoviesProvider or any name you want.
@@ -209,7 +212,7 @@ You can use `useContext` instead of wrapping the components with a consumer.
 
 1. Import the context instance.
 2. Import the useContext form react.
-3. instead of wrapping the component with consumer just destructure the values from the useContext and you are good to go
+3. Instead of wrapping the component with Consumer just destructure the values from the useContext and you are good to go
 
 <details>
 <summary>
@@ -269,19 +272,20 @@ class MyClass extends React.Component {
 - Get back to [this](https://github.com/facebook/react/issues/15156#issuecomment-474590693) after you are comfortable with the Context API and the Hooks.
 
 - ### Redux vs Context API:
+  ***It is up to you but this is some of the things to keep in your mind before deciding on using one over the other***
     **Context API**
-    * Context is hard to debug doesn't have a debuging tools like redux.
+    * Context is hard to debug doesn't have debugging tools like redux.
     * No middlewares with Context API.
 
-    **Why use Redux:**
-    * seperation of concern(every function pure and do one thing/ you know everything about the input and the output)
-    * predictability(you know everything about the state/action shape...)
+    **When to use Redux:**
+    * Separation  of concern(every function pure and do one thing/ you know everything about the input and the output)
+    * Predictability(you know everything about the state/action shape...)
     * Ease of test (pure function)
-    * community support
+    * Community support
     * Redux devtools(time travel)
     * MiddleWares
 
-    **Why not use Redux:**
+    **When not to use Redux:**
     * 10 components for example
-    * large application but only a few component interact with each other
-    * the size of the application where the bundle became bigger with redux
+    * Large application but only a few components interact with each other
+    * The size of the application where the bundle became bigger with redux
