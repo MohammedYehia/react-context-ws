@@ -1,5 +1,5 @@
 import React from 'react';
 
-const moviesContext = React.createContext();
+const MoviesContext = React.createContext();
 
-export default moviesContext;
+export default MoviesContext;
