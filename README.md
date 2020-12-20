@@ -182,7 +182,7 @@ export default MoviesProvider;
 
 </details>
 
-4. And the last step is to convert the App to functional component and wrap it with the MoviesProvider instead of the Context.Provider
+4. And the last step is to wrap the App component with the MoviesProvider instead of the Context.Provider.
 
 <details><summary>Code</summary>
 
@@ -204,66 +204,6 @@ const App = () => {
 };
 
 export default App;
-```
-
-</details>
-
-## Context in class component
-
-- You can use `this.context` inside the class to read the value of the nearest context without the consumer object but you can't consume multiple consumers.
-- You can use it inside any lifecycle method inside the class
-
-```jsx
-class MyClass extends React.Component {
-  render() {
-    let value = this.context;
-    /* render something based on the value of MyContext */
-  }
-}
-
-//this is attaching Context instance to contextType static field of MyClass
-MyClass.contextType = Context;
-```
-
-or we can define the contextType inside the MyClass
-
-```jsx
-class MyClass extends React.Component {
-  static contextType = Context;
-  render() {
-    let value = this.context;
-    /* render something based on the value */
-  }
-}
-```
-
-## Bonus #1
-
-Try and use `this.context` with our app instead of using the Consumer
-
-## Bonus #2
-
-### Refactor to use useContext hook:
-
-You can use `useContext` instead of wrapping the components with a consumer.
-
-1. Import the context instance.
-2. Import the useContext form react.
-3. Instead of wrapping the component with Consumer just use destructuring to extract the values from the useContext and you are good to go
-
-<details>
-<summary>
-Code
-</summary>
-
-```jsx
-import React, { useContext } from "react";
-import { MoviesContext } from "../../context/moviesContext";
-
-const MoviesListComp = () => {
-  const { movies, deleteMovie } = useContext(MoviesContext);
-  return <ul>{movies.map((movie) => createCard(movie, deleteMovie))}</ul>;
-};
 ```
 
 </details>
