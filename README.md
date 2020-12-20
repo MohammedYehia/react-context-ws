@@ -84,8 +84,10 @@ App->MoviesListPage->MoviesListComp->Card
 
 1. Clone the repo, install the dependencies, run the app, check the files and the components.
 2. Now let's create our Context:
-_ Create a folder called `context` on the src folder.
-_ Create a file called `MoviesContext.js` \* Now let's create our Context instance.
+
+   - Create a folder called `context` on the src folder.
+   - Create a file called `MoviesContext.js` \* Now let's create our Context instance.
+
 <details><summary>Code</summary>
 
 ```jsx
