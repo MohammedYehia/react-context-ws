@@ -2,28 +2,31 @@
 
 ## What is react Context API?
 
-React's context allows you to share data with any component, by storing this data on a central place, you can think of it like a global store where every component would be able to request access to it.
-instead of the normal way of passing the data from the parent to the direct child via props which would cause sometimes something called prop drilling
+React's context allows you to share data with any component, by storing this data in a central place, you can think of it as a global store where every component would be able to access it. instead of the normal way of passing the data from the parent to the direct child via props which would cause sometimes something called prop drilling.
 
 ## What is prop drilling?
+
 Prop drilling (also called "threading"): passing props from component to another to another and so on.... refers to the process you have to go through to get data to parts of the React Component tree
 
-- for example if we have this tree of components 
+- for example, if we have this tree of components
 
   ![](https://i.imgur.com/TGDgI2f.png)
 
-  and if we wanted to pass data to Component `C` then we have to pass it through `A` then `B` before getting access to it inside `C` component.
-  we can solve this problem using ***Context API***.
+  and if we wanted to pass data to Component `C` then we have to pass it through `A` then `B` Component before getting access to it inside the `C` component.
+  we can solve this problem using **_Context API_**.
 
 ## What do we need to start working with the Context API?
-It's a built-in feature You will only need a react 16.3 or above, no external libraries or anything.
+
+It's a built-in feature.You will only need React 16.3 or above, no external libraries or anything.
 
 ## The building blocks of Context API
+
 1. Context Instance.
 2. Provider.
 3. Consumer.
 
 ### Context Instance:
+
 It is the instance we are going to use to link the parts together.
 
 ```jsx
@@ -34,35 +37,42 @@ Here we are creating an instance that can receive an optional default value it i
 We will use this object to create the provider and the consumer
 
 ### Provider
-This is the delivery system for our store, the piece that is going to deliver the data to other consumers on the app.
-> we can have nested provider
 
+This is the delivery system for our store, the piece that is going to deliver the data to other consumers on the app.
+
+> we can have nested provider
 
 ```jsx
 // Context is the instance the we created before
 <Context.Provider value={/* some value */}>
-{/*...components that can consume the store*/}
+  {/*...components that can consume the store*/}
 </Context.Provider>
 ```
+
 **Note:** we can't use anything other than the value prop name (it is a reserved word for the provider)
 
-We simply say that anything wrapped under this Provider component will have access to this value via the Consumer 
+We simply say that anything wrapped under this Provider component will have access to this value via the Consumer
 
 if the provider has a value then the consumer will use this value instead of the default value
 
-### Consumer
+### Consumer using UseContext Hook
+
 It is the object that we use to access the context's value.
+
 > we can have multiple consumers subscribed to the same Provider.
 > The Consumer will find the closest provider to get the data from or it will use the default value if the Provider value was omitted.
 
 The value we pass to the Provider is sent to our Consumer as a param to the Consumer function
+
 ```jsx
-<Context.Consumer>
-  {value => /* render something based on the context value */}
-</Context.Consumer>
+const consumer = React.useContext(ContextObj)
+...
+//you can now access consumer values using consumer variable
+
 ```
 
 ## Exercise
+
 Let's use the Context API with our app
 
 We will use a simple example for the sake of simplicity, but you can imagine this part being a part of a bigger app.
@@ -74,22 +84,21 @@ App->MoviesListPage->MoviesListComp->Card
 
 1. Clone the repo, install the dependencies, run the app, check the files and the components.
 2. Now let's create our Context:
-    * Create a folder called `context` on the src folder.
-    * Create a file called `MoviesContext.js`
-    * Now let's create our Context instance.
+_ Create a folder called `context` on the src folder.
+_ Create a file called `MoviesContext.js` \* Now let's create our Context instance.
 <details><summary>Code</summary>
 
 ```jsx
-import React from 'react';
+import React from "react";
 
 const MoviesContext = React.createContext();
 
 export default MoviesContext;
-
 ```
+
 </details>
 
-3. Import the context instance inside the app component and wrap what inside the app with the Context.Provider and the pass the movies and the delete function to Provider value property.
+3. Import the context instance inside the app component and wrap what inside the app with the Context.Provider and pass the movies and the delete function to Provider value property.
 
 <details><summary>Code</summary>
 
@@ -99,7 +108,7 @@ import MoviesContext from './context/moviesContext';
 
 render() {
     return (
-      <MoviesContext.Provider value={{ deleteMovie: this.deleteMovie, movies: this.state.movies }}>
+      <MoviesContext.Provider value={{ deleteMovie, movies }}>
         <div className="App">
           {/* <Nav /> */}
           <h1>MOVIES</h1>
@@ -112,43 +121,39 @@ render() {
   }
 
 ```
+
 </details>
 
 4. Now all we have to do is to use this data on any component descendant of the same vertical line
-    * insert the context instance inside MoviesListComp and then wrap the component with Context.Consumer
+   - Import the context instance from MoviesListComp.
+   - Call `useContext` Hook and pass it the context object.
 
 <details><summary>Code</summary>
 
 ```jsx
-import MoviesContext from './context/moviesContext';
+import MoviesContext from "./context/moviesContext";
 //....code
 
-const MoviesListComp = () => (
-  <MoviesContext.Consumer>
-    {/*this function receives the value and we used destructure to get the movies and delteMovie funtion*/}
-    {({ movies, deleteMovie }) => (
-      <ul>
-        {movies.map(movie => createCard(movie, deleteMovie))}
-      </ul>)
-    }
-  </MoviesContext.Consumer>
-)
+const MoviesListComp = () => {
+  const { movies, deleteMovie } = React.useContext(MoviesContext);
 
-
+  return <ul>{movies.map((movie) => createCard(movie, deleteMovie))}</ul>;
+};
 ```
+
 </details>
 
 5. Everything is done this how we can use the Context API
 
--------
+---
 
 ## Refactor to a central store
-now the app doesn't have to be a class component so we can refactor our code to have **a central store**.
 
-1. Now on our moviesContext file creat a class called MoviesProvider or any name you want.
-2. move the state and the deleteMovie method from the App to MoviesProvider class
-3. now inside the render method we will receive the  other components using children props.
+We can refactor our code to have **a central store**.
 
+1. Now on our moviesContext file create a component called MoviesProvider or any name you want.
+2. Move the state and the deleteMovie method from the App to MoviesProvider component.
+3. We will receive the other components using children props.
 
 <details><summary>Code</summary>
 
@@ -157,35 +162,32 @@ import React from 'react';
 
 export const MoviesContext = React.createContext();
 
-class MoviesProvider extends React.Component {
+function MoviesProvider ({children}) {
+  const [movies, setMovies] = React.useState(moviesList);
 
-state = {...}
+  deleteMovie = (id) => {...}
 
-deleteMovie = (id) => {...}
-
- render() {
+  render() {
     return (
-      <MoviesContext.Provider value={{ deleteMovie: this.deleteMovie, movies: this.state.movies }}>
-        {this.props.children}
+      <MoviesContext.Provider value={{ deleteMovie, movies }}>
+        {children}
       </MoviesContext.Provider>
     );
   }
-
 }
 
 export default MoviesProvider;
 
 ```
+
 </details>
 
-4. And the last step is to convert the App to functional component and wrap it with the MoviesProvider instead of the Context.Provider 
+4. And the last step is to convert the App to functional component and wrap it with the MoviesProvider instead of the Context.Provider
 
 <details><summary>Code</summary>
 
 ```jsx
-
-import MoviesProvider from './context/moviesContext';
-
+import MoviesProvider from "./context/moviesContext";
 
 const App = () => {
   return (
@@ -199,11 +201,11 @@ const App = () => {
       </div>
     </MoviesProvider>
   );
-}
+};
 
 export default App;
-
 ```
+
 </details>
 
 ## Context in class component
@@ -234,16 +236,20 @@ class MyClass extends React.Component {
   }
 }
 ```
+
 ## Bonus #1
+
 Try and use `this.context` with our app instead of using the Consumer
 
 ## Bonus #2
+
 ### Refactor to use useContext hook:
+
 You can use `useContext` instead of wrapping the components with a consumer.
 
 1. Import the context instance.
 2. Import the useContext form react.
-3. Instead of wrapping the component with Consumer just destructure the values from the useContext and you are good to go
+3. Instead of wrapping the component with Consumer just use destructuring to extract the values from the useContext and you are good to go
 
 <details>
 <summary>
@@ -251,18 +257,13 @@ Code
 </summary>
 
 ```jsx
-
-import React, { useContext } from 'react';
-import { MoviesContext } from '../../context/moviesContext';
+import React, { useContext } from "react";
+import { MoviesContext } from "../../context/moviesContext";
 
 const MoviesListComp = () => {
   const { movies, deleteMovie } = useContext(MoviesContext);
-  return (
-    <ul>
-      {movies.map(movie => createCard(movie, deleteMovie))}
-    </ul>
-  )
-}
+  return <ul>{movies.map((movie) => createCard(movie, deleteMovie))}</ul>;
+};
 ```
 
 </details>
@@ -289,21 +290,25 @@ after this the Provider will have a name.
 - Get back to [this](https://github.com/facebook/react/issues/15156#issuecomment-474590693) after you are comfortable with the Context API and the Hooks.
 
 - ### Redux vs Context API:
-  ***It is up to you but this is some of the things to keep in your mind before deciding on using one over the other***
 
-    **Context API**
-    * Context is hard to debug doesn't have debugging tools like redux.
-    * No middlewares with Context API.
+  **_It is up to you but this is some of the things to keep in your mind before deciding on using one over the other_**
 
-    **When to use Redux:**
-    * Separation  of concern(every function pure and do one thing/ you know everything about the input and the output)
-    * Predictability(you know everything about the state/action shape...)
-    * Ease of test (pure function)
-    * Community support
-    * Redux devtools(time travel)
-    * MiddleWares
+  **Context API**
 
-    **When not to use Redux:**
-    * 10 components for example
-    * Large application but only a few components interact with each other
-    * The size of the application where the bundle became bigger with redux
+  - Context is hard to debug doesn't have debugging tools like redux.
+  - No middlewares with Context API.
+
+  **When to use Redux:**
+
+  - Separation of concern(every function pure and do one thing/ you know everything about the input and the output)
+  - Predictability(you know everything about the state/action shape...)
+  - Ease of test (pure function)
+  - Community support
+  - Redux devtools(time travel)
+  - MiddleWares
+
+  **When not to use Redux:**
+
+  - 10 components for example
+  - Large application but only a few components interact with each other
+  - The size of the application where the bundle became bigger with redux
