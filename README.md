@@ -226,15 +226,15 @@ after this the Provider will have a name.
 
 ![](https://i.imgur.com/N2SeNYa.png)
 
-- [You can Consume Multiple Contexts](https://reactjs.org/docs/context.html#consuming-multiple-contexts)
+- You can Consume Multiple Contexts.
 - All consumers that are descendants of a Provider will re-render whenever the Provider’s `value` prop changes.
-- [Performance tips](https://reactjs.org/docs/context.html#caveats)
+- [Performance tips](https://reactjs.org/docs/context.html#caveats).
 - You should not always use the context if you only passing the data down two or three components.
 - Get back to [this](https://github.com/facebook/react/issues/15156#issuecomment-474590693) after you are comfortable with the Context API and the Hooks.
 
 - ### Redux vs Context API:
 
-  **_It is up to you but this is some of the things to keep in your mind before deciding on using one over the other_**
+  **_It is up to you but these are some of the things to keep in your mind before deciding on using one over the other_**
 
   **Context API**
 
