@@ -86,7 +86,8 @@ App->MoviesListPage->MoviesListComp->Card
 2. Now let's create our Context:
 
    - Create a folder called `context` on the src folder.
-   - Create a file called `MoviesContext.js` \* Now let's create our Context instance.
+   - Create a file called `MoviesContext.js`.
+   - Now let's create our Context instance.
 
 <details><summary>Code</summary>
 
@@ -128,7 +129,7 @@ render() {
 
 4. Now all we have to do is to use this data on any component descendant of the same vertical line
    - Import the context instance from MoviesListComp.
-   - Call `useContext` Hook and pass it the context object.
+   - Call `useContext` Hook with context object as the argument.
 
 <details><summary>Code</summary>
 
