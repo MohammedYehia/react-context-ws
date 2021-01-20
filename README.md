@@ -55,7 +55,7 @@ We simply say that anything wrapped under this Provider component will have acce
 
 if the provider has a value then the consumer will use this value instead of the default value
 
-### Consumer using UseContext Hook
+### Consumer using useContext Hook
 
 It is the object that we use to access the context's value.
 
